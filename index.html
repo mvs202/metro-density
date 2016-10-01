@@ -71,18 +71,46 @@ var silver = [
   {name: "Metro Center",        lat: 38.898327, lng: -77.027777, dist: 11.0430},
   {name: "McPherson Square",    lat: 38.901335, lng: -77.031958, dist: 11.3508},
   {name: "Farragut West",       lat: 38.901366, lng: -77.039482, dist: 11.7555},
-  {name: "Foggy Bottom–GWU",    lat: 38.900705, lng: -77.050026, dist: 12.3239},
+  {name: "Foggy Bottom",        lat: 38.900705, lng: -77.050026, dist: 12.3239},
   {name: "Rosslyn",             lat: 38.895493, lng: -77.071954, dist: 13.5534},
   {name: "Court House",         lat: 38.891331, lng: -77.084823, dist: 14.3004},
   {name: "Clarendon",           lat: 38.887176, lng: -77.094987, dist: 14.9153},
-  {name: "Virginia Square-GMU", lat: 38.883074, lng: -77.103809, dist: 15.4657},
-  {name: "Ballston-MU",         lat: 38.882238, lng: -77.111550, dist: 15.8856},
+  {name: "Virginia Square",     lat: 38.883074, lng: -77.103809, dist: 15.4657},
+  {name: "Ballston",            lat: 38.882238, lng: -77.111550, dist: 15.8856},
   {name: "East Falls Church",   lat: 38.886042, lng: -77.156567, dist: 18.3242},
   {name: "McLean",              lat: 38.925069, lng: -77.208304, dist: 22.2170},
   {name: "Tysons Corner",       lat: 38.920304, lng: -77.221713, dist: 23.0070},
   {name: "Greensboro",          lat: 38.919564, lng: -77.232555, dist: 23.5917},
   {name: "Spring Hill",         lat: 38.928544, lng: -77.240880, dist: 24.3598},
   {name: "Wiehle-Reston East",  lat: 38.947134, lng: -77.337699, dist: 29.7307}
+  ];
+var orange = [
+  {name: "New Carrollton",    lat: 38.946912, lng: -76.870445, dist:  0.0000},
+  {name: "Landover",          lat: 38.933994, lng: -76.890005, dist:  1.3710},
+  {name: "Cheverly",          lat: 38.916552, lng: -76.915104, dist:  3.1697},
+  {name: "Deanwood",          lat: 38.907945, lng: -76.935569, dist:  4.4146},
+  {name: "Minnesota Avenue",  lat: 38.898313, lng: -76.947716, dist:  5.3419},
+  {name: "Stadium–Armory",    lat: 38.885982, lng: -76.977168, dist:  7.1322},
+  {name: "Potomac Avenue",    lat: 38.880874, lng: -76.985397, dist:  7.6953},
+  {name: "Eastern Market",    lat: 38.884148, lng: -76.995010, dist:  8.2619},
+  {name: "Capitol South",     lat: 38.885669, lng: -77.005892, dist:  8.8578},
+  {name: "Federal Center SW", lat: 38.884981, lng: -77.015536, dist:  9.3782},
+  {name: "L'Enfant Plaza",    lat: 38.884886, lng: -77.021600, dist:  9.7044},
+  {name: "Smithsonian",       lat: 38.887587, lng: -77.028174, dist: 10.1061},
+  {name: "Federal Triangle",  lat: 38.893789, lng: -77.027896, dist: 10.5347},
+  {name: "Metro Center",      lat: 38.898327, lng: -77.027777, dist: 10.8483},
+  {name: "McPherson Square",  lat: 38.901335, lng: -77.031958, dist: 11.1561},
+  {name: "Farragut West",     lat: 38.901366, lng: -77.039482, dist: 11.5608},
+  {name: "Foggy Bottom",      lat: 38.900705, lng: -77.050026, dist: 12.1292},
+  {name: "Rosslyn",           lat: 38.895493, lng: -77.071954, dist: 13.3587},
+  {name: "Court House",       lat: 38.891331, lng: -77.084823, dist: 14.1057},
+  {name: "Clarendon",         lat: 38.887176, lng: -77.094987, dist: 14.7206},
+  {name: "Virginia Square",   lat: 38.883074, lng: -77.103809, dist: 15.2710},
+  {name: "Ballston",          lat: 38.882238, lng: -77.111550, dist: 15.6909},
+  {name: "East Falls Church", lat: 38.886042, lng: -77.156567, dist: 18.1295},
+  {name: "West Falls Church", lat: 38.900738, lng: -77.188871, dist: 20.1502},
+  {name: "Dunn Loring",       lat: 38.883146, lng: -77.228654, dist: 22.6023},
+  {name: "Vienna",            lat: 38.877881, lng: -77.271363, dist: 24.9258}
   ];
 var yellow = [
   {name: "Huntington",             lat: 38.793895, lng: -77.074955, dist:  0.0000},
@@ -104,10 +132,12 @@ var yellow = [
   {name: "Fort Totten",            lat: 38.951808, lng: -77.001864, dist: 13.8127}
   ];
 silver = reverseLine(silver);
+orange = reverseLine(orange);
 var stations = [];
 var geoDisplay = true;
 for (var i = 0; i < red.length; i++)    {stations.push(red[i]);}
 for (var i = 0; i < silver.length; i++) {stations.push(silver[i]);}
+for (var i = 0; i < orange.length; i++) {stations.push(orange[i]);}
 for (var i = 0; i < yellow.length; i++) {stations.push(yellow[i]);}
 
 function reverseLine(line) {
@@ -129,8 +159,9 @@ function switchDisplay() {
   }
 
 function verticalLevel(s) {
-  if (s < red.length) {return 3;}
+  if (s < red.length) {return 4;}
   if (s < red.length + silver.length) {return 2;}
+  if (s < red.length + silver.length + orange.length) {return 3;}
   return 1;
   }
 
@@ -153,6 +184,10 @@ function showDist(duration) {
     .transition()
     .duration(duration)
     .attr("d", function () {return distline3(yellow);});
+  p4.data(orange)
+    .transition()
+    .duration(duration)
+    .attr("d", function () {return distline4(orange);});
   }
 
 function showGeo(duration) {
@@ -174,6 +209,10 @@ function showGeo(duration) {
     .transition()
     .duration(duration)
     .attr("d", function () {return geoline(yellow);});
+  p4.data(orange)
+    .transition()
+    .duration(duration)
+    .attr("d", function () {return geoline(orange);});
   }
 
 var w = window.innerWidth,
@@ -189,7 +228,7 @@ var distScale = d3.scale.linear()
   .domain([0, d3.max(stations, function (d) {return d.dist;})])
   .range([margin, w - margin]);
 var displayScale = d3.scale.linear()
-  .domain([0, 4])
+  .domain([0, 5])
   .range([h - margin, margin]);
 var display = d3.select('body')
   .append('svg:svg')
@@ -203,7 +242,7 @@ var geoline = d3.svg.line()
   .interpolate("linear");
 var distline1 = d3.svg.line()
   .x(function(d) {return distScale(d.dist);})
-  .y(function(d) {return displayScale(3);})
+  .y(function(d) {return displayScale(4);})
   .interpolate("linear");
 var distline2 = d3.svg.line()
   .x(function(d) {return distScale(d.dist);})
@@ -211,6 +250,9 @@ var distline2 = d3.svg.line()
 var distline3 = d3.svg.line()
   .x(function(d) {return distScale(d.dist);})
   .y(function(d) {return displayScale(1);})
+var distline4 = d3.svg.line()
+  .x(function(d) {return distScale(d.dist);})
+  .y(function(d) {return displayScale(3);})
   .interpolate("linear");
 var p1 = g.append("path")
   .style("stroke-width", 15)
@@ -223,6 +265,10 @@ var p2 = g.append("path")
 var p3 = g.append("path")
   .style("stroke-width", 15)
   .style("stroke", "yellow")
+  .style("fill", "none");
+var p4 = g.append("path")
+  .style("stroke-width", 15)
+  .style("stroke", "orange")
   .style("fill", "none");
 g.selectAll("MetroStations")
   .data(stations)
