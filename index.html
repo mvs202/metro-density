@@ -19,10 +19,20 @@ svg {
   width: 100%;
   height: 100%;
   }
+#controls {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  z-index: 1;
+  }
 </style>
 <script src="https://d3js.org/d3.v2.min.js"></script>
 </head>
-<body onclick="switchDisplay()">
+<body>
+<div id=controls >
+  <input type=radio name=displayType id=geographic onchange="switchDisplay()" checked ><label for=geographic >geographic</label>
+  <input type=radio name=displayType id=linear onchange="switchDisplay()"><label for=linear >linear</label>
+  </div>
 </body>
 <script>
 var red = [
@@ -187,7 +197,6 @@ silver = reverseLine(silver);
 orange = reverseLine(orange);
 blue = reverseLine(blue);
 var stations = [];
-var geoDisplay = true;
 for (var i = 0; i < red.length; i++)    {stations.push(red[i]);}
 for (var i = 0; i < silver.length; i++) {stations.push(silver[i]);}
 for (var i = 0; i < orange.length; i++) {stations.push(orange[i]);}
@@ -208,9 +217,8 @@ function reverseLine(line) {
   }
 
 function switchDisplay() {
-  if (geoDisplay) {showDist(800);}
-  else            {showGeo(800);}
-  geoDisplay = !geoDisplay;
+  if (document.getElementById("geographic").checked) {showGeo( 800);}
+  else                                               {showDist(800);}
   }
 
 function verticalLevel(s) {
