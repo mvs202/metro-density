@@ -115,8 +115,8 @@ var orange = [
 var yellow = [
   {name: "Huntington",             lat: 38.793895, lng: -77.074955, dist:  0.0000},
   {name: "Eisenhower Ave",         lat: 38.800345, lng: -77.070831, dist:  0.4960},
-  {name: "King Street",            lat: 38.806506, lng: -77.060796, dist:  1.1805},
-  {name: "Braddock Road",          lat: 38.814052, lng: -77.053434, dist:  1.8324},
+  {name: "King St",                lat: 38.806506, lng: -77.060796, dist:  1.1805},
+  {name: "Braddock Rd",            lat: 38.814052, lng: -77.053434, dist:  1.8324},
   {name: "National Airport",       lat: 38.853003, lng: -77.043475, dist:  4.5720},
   {name: "Crystal City",           lat: 38.857817, lng: -77.050346, dist:  5.0720},
   {name: "Pentagon City",          lat: 38.862961, lng: -77.059142, dist:  5.6669},
@@ -140,22 +140,52 @@ var green = [
   {name: "Anacostia",        lat: 38.862117, lng: -76.995325, dist:  6.2191},
   {name: "Navy Yard",        lat: 38.876517, lng: -77.004749, dist:  7.3411},
   {name: "Waterfront",       lat: 38.876478, lng: -77.017189, dist:  8.0104},
-  {name: "xxxxx", lat: 38.884886, lng: -77.021600, dist:  8.6403},
-  {name: "xxxxx", lat: 38.893907, lng: -77.021592, dist:  9.2638},
-  {name: "xxxxx", lat: 38.898354, lng: -77.021527, dist:  9.5712},
-  {name: "xxxxx", lat: 38.905638, lng: -77.021905, dist: 10.0752},
-  {name: "xxxxx", lat: 38.914546, lng: -77.021927, dist: 10.6909},
-  {name: "xxxxx", lat: 38.917015, lng: -77.029169, dist: 11.1176},
-  {name: "xxxxx", lat: 38.928711, lng: -77.032454, dist: 11.9468},
-  {name: "xxxxx", lat: 38.936255, lng: -77.024252, dist: 12.6259},
-  {name: "xxxxx", lat: 38.951808, lng: -77.001864, dist: 14.2309},
-  {name: "West Hyattsville",      lat: 38.955028, lng: -76.969522, dist: 15.9809},
-  {name: "Prince George's Plaza", lat: 38.965252, lng: -76.955988, dist: 16.9892},
-  {name: "College Park",          lat: 38.978400, lng: -76.928197, dist: 18.7282},
-  {name: "Greenbelt",             lat: 39.011067, lng: -76.911011, dist: 21.1574}
+  {name: "L'Enfant Plaza",   lat: 38.884886, lng: -77.021600, dist:  8.6403},
+  {name: "Archives-Navy Memorial", lat: 38.893907, lng: -77.021592, dist:  9.2638},
+  {name: "Gallery Place",          lat: 38.898354, lng: -77.021527, dist:  9.5712},
+  {name: "Mount Vernon Square",    lat: 38.905638, lng: -77.021905, dist: 10.0752},
+  {name: "Shaw",                   lat: 38.914546, lng: -77.021927, dist: 10.6909},
+  {name: "U Street",               lat: 38.917015, lng: -77.029169, dist: 11.1176},
+  {name: "Columbia Heights",       lat: 38.928711, lng: -77.032454, dist: 11.9468},
+  {name: "Georgia Ave-Petworth",   lat: 38.936255, lng: -77.024252, dist: 12.6259},
+  {name: "Fort Totten",            lat: 38.951808, lng: -77.001864, dist: 14.2309},
+  {name: "West Hyattsville",       lat: 38.955028, lng: -76.969522, dist: 15.9809},
+  {name: "Prince George's Plaza",  lat: 38.965252, lng: -76.955988, dist: 16.9892},
+  {name: "College Park",           lat: 38.978400, lng: -76.928197, dist: 18.7282},
+  {name: "Greenbelt",              lat: 39.011067, lng: -76.911011, dist: 21.1574}
+  ];
+var blue = [
+  {name: "Largo Town Center",     lat: 38.900269, lng: -76.844540, dist:  0.0000},
+  {name: "Morgan Boulevard",      lat: 38.893586, lng: -76.868498, dist:  1.3634},
+  {name: "Addison Rd",            lat: 38.886702, lng: -76.893290, dist:  2.7739},
+  {name: "Capitol Heights",       lat: 38.889571, lng: -76.913313, dist:  3.8714},
+  {name: "Benning Rd",            lat: 38.890418, lng: -76.937662, dist:  5.1831},
+  {name: "Stadium–Armory",        lat: 38.885982, lng: -76.977168, dist:  7.3269},
+  {name: "Potomac Ave",           lat: 38.880874, lng: -76.985397, dist:  7.8900},
+  {name: "Eastern Market",        lat: 38.884148, lng: -76.995010, dist:  8.4566},
+  {name: "Capitol South",         lat: 38.885669, lng: -77.005892, dist:  9.0525},
+  {name: "Federal Center SW",     lat: 38.884981, lng: -77.015536, dist:  9.5729},
+  {name: "L'Enfant Plaza",        lat: 38.884886, lng: -77.021600, dist:  9.8991},
+  {name: "Smithsonian",           lat: 38.887587, lng: -77.028174, dist: 10.3008},
+  {name: "Federal Triangle",      lat: 38.893789, lng: -77.027896, dist: 10.7294},
+  {name: "Metro Center",          lat: 38.898327, lng: -77.027777, dist: 11.0430},
+  {name: "McPherson Square",      lat: 38.901335, lng: -77.031958, dist: 11.3508},
+  {name: "Farragut West",         lat: 38.901366, lng: -77.039482, dist: 11.7555},
+  {name: "Foggy Bottom",          lat: 38.900705, lng: -77.050026, dist: 12.3239},
+  {name: "Rosslyn",               lat: 38.895493, lng: -77.071954, dist: 13.5534},
+  {name: "Arlington Cemetery",    lat: 38.884612, lng: -77.062795, dist: 14.4566},
+  {name: "Pentagon",              lat: 38.869474, lng: -77.053777, dist: 15.6144},
+  {name: "Pentagon City",         lat: 38.862961, lng: -77.059142, dist: 16.1466},
+  {name: "Crystal City",          lat: 38.857817, lng: -77.050346, dist: 16.7415},
+  {name: "National Airport",      lat: 38.853003, lng: -77.043475, dist: 17.2415},
+  {name: "Braddock Rd",           lat: 38.814052, lng: -77.053434, dist: 19.9811},
+  {name: "King St",               lat: 38.806506, lng: -77.060796, dist: 20.6330},
+  {name: "Van Dorn St",           lat: 38.799263, lng: -77.129111, dist: 24.3415},
+  {name: "Franconia–Springfield", lat: 38.766196, lng: -77.168487, dist: 27.4453}
   ];
 silver = reverseLine(silver);
 orange = reverseLine(orange);
+blue = reverseLine(blue);
 var stations = [];
 var geoDisplay = true;
 for (var i = 0; i < red.length; i++)    {stations.push(red[i]);}
@@ -163,6 +193,7 @@ for (var i = 0; i < silver.length; i++) {stations.push(silver[i]);}
 for (var i = 0; i < orange.length; i++) {stations.push(orange[i]);}
 for (var i = 0; i < yellow.length; i++) {stations.push(yellow[i]);}
 for (var i = 0; i < green.length; i++)  {stations.push(green[i]);}
+for (var i = 0; i < blue.length; i++)   {stations.push(blue[i]);}
 
 function reverseLine(line) {
   var reverse = [];
@@ -183,11 +214,12 @@ function switchDisplay() {
   }
 
 function verticalLevel(s) {
-  if (s < red.length) {return 5;}
+  if (s < red.length) {return 6;}
   if (s < red.length + silver.length) {return 3;}
-  if (s < red.length + silver.length + orange.length) {return 4;}
+  if (s < red.length + silver.length + orange.length) {return 5;}
   if (s < red.length + silver.length + orange.length + yellow.length) {return 2;}
-  return 1;
+  if (s < red.length + silver.length + orange.length + yellow.length + green.length) {return 1;}
+  return 4;
   }
 
 function showDist(duration) {
@@ -217,6 +249,10 @@ function showDist(duration) {
     .transition()
     .duration(duration)
     .attr("d", function () {return distline5(green);});
+  p6.data(blue)
+    .transition()
+    .duration(duration)
+    .attr("d", function () {return distline6(blue);});
   }
 
 function showGeo(duration) {
@@ -246,6 +282,10 @@ function showGeo(duration) {
     .transition()
     .duration(duration)
     .attr("d", function () {return geoline(green);});
+  p6.data(blue)
+    .transition()
+    .duration(duration)
+    .attr("d", function () {return geoline(blue);});
   }
 
 var w = window.innerWidth,
@@ -261,7 +301,7 @@ var distScale = d3.scale.linear()
   .domain([0, d3.max(stations, function (d) {return d.dist;})])
   .range([margin, w - margin]);
 var displayScale = d3.scale.linear()
-  .domain([0, 6])
+  .domain([0, 7])
   .range([h - margin, margin]);
 var display = d3.select('body')
   .append('svg:svg')
@@ -275,7 +315,7 @@ var geoline = d3.svg.line()
   .interpolate("linear");
 var distline1 = d3.svg.line()
   .x(function(d) {return distScale(d.dist);})
-  .y(function(d) {return displayScale(5);})
+  .y(function(d) {return displayScale(6);})
   .interpolate("linear");
 var distline2 = d3.svg.line()
   .x(function(d) {return distScale(d.dist);})
@@ -285,31 +325,39 @@ var distline3 = d3.svg.line()
   .y(function(d) {return displayScale(2);})
 var distline4 = d3.svg.line()
   .x(function(d) {return distScale(d.dist);})
-  .y(function(d) {return displayScale(4);})
+  .y(function(d) {return displayScale(5);})
   .interpolate("linear");
 var distline5 = d3.svg.line()
   .x(function(d) {return distScale(d.dist);})
   .y(function(d) {return displayScale(1);})
   .interpolate("linear");
+var distline6 = d3.svg.line()
+  .x(function(d) {return distScale(d.dist);})
+  .y(function(d) {return displayScale(4);})
+  .interpolate("linear");
 var p1 = g.append("path")
   .style("stroke-width", 15)
-  .style("stroke", "red")
+  .style("stroke", "#FF1C18")
   .style("fill", "none");
 var p2 = g.append("path")
   .style("stroke-width", 15)
-  .style("stroke", "silver")
+  .style("stroke", "#CCCCD8")
   .style("fill", "none");
 var p3 = g.append("path")
   .style("stroke-width", 15)
-  .style("stroke", "yellow")
+  .style("stroke", "#F3EC11")
   .style("fill", "none");
 var p4 = g.append("path")
   .style("stroke-width", 15)
-  .style("stroke", "orange")
+  .style("stroke", "#FC7D20")
   .style("fill", "none");
 var p5 = g.append("path")
   .style("stroke-width", 15)
-  .style("stroke", "green")
+  .style("stroke", "#008749")
+  .style("fill", "none");
+var p6 = g.append("path")
+  .style("stroke-width", 15)
+  .style("stroke", "#075B99")
   .style("fill", "none");
 g.selectAll("MetroStations")
   .data(stations)
