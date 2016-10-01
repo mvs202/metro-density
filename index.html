@@ -22,7 +22,7 @@ svg {
 </style>
 <script src="https://d3js.org/d3.v2.min.js"></script>
 </head>
-<body>
+<body onclick="switchDisplay()">
 </body>
 <script>
 var red = [
@@ -54,15 +54,56 @@ var red = [
   {name: "Wheaton",              lat: 39.038565, lng: -77.050776, dist: 29.4413},
   {name: "Glenmont",             lat: 39.061743, lng: -77.053097, dist: 31.0492}
   ];
+var geoDisplay = true;
+
+function switchDisplay() {
+  if (geoDisplay) {showDist();}
+  else            {showGeo();}
+  geoDisplay = !geoDisplay;
+  }
+
+function showDist() {
+  d3.select("svg").selectAll("circle")
+    .data(red)
+    .transition()
+    .duration(800)
+    .attr("cx", function (d) {return distScale(d.dist);})
+    .attr("cy", function (d) {return displayScale(1);});
+  d3.select("svg").selectAll("path")
+    .data(red)
+    .transition()
+    .duration(800)
+    .attr("d", function () {return distline(red);});
+  }
+
+function showGeo() {
+  d3.select("svg").selectAll("circle")
+    .data(red)
+    .transition()
+    .duration(800)
+    .attr("cx", function (d) {return lngScale(d.lng);})
+    .attr("cy", function (d) {return latScale(d.lat);});
+  d3.select("svg").selectAll("path")
+    .data(red)
+    .transition()
+    .duration(800)
+    .attr("d", function () {return geoline(red);});
+  }
 
 var w = window.innerWidth,
     h = window.innerHeight;
 var margin = 20;
-var x = d3.scale.linear()
+var lngScale = d3.scale.linear()
   .domain([d3.min(red, function (d) {return d.lng;}), d3.max(red, function (d) {return d.lng;})])
   .range([margin, w - margin]);
-var y = d3.scale.linear()
+var latScale = d3.scale.linear()
   .domain([d3.min(red, function (d) {return d.lat;}), d3.max(red, function (d) {return d.lat;})])
+  .range([h - margin, margin]);
+var distScale = d3.scale.linear()
+  .domain([0, d3.max(red, function (d) {return d.dist;})])
+  .range([margin, w - margin]);
+var displayScale = d3.scale.linear()
+  .domain([0, 2])
   .range([h - margin, margin]);
 var display = d3.select('body')
   .append('svg:svg')
@@ -70,21 +111,25 @@ var display = d3.select('body')
   .attr('height', h)
   .attr('class', 'display');
 var g = display.append('g')
-var line = d3.svg.line()
-  .x(function(d) {return x(d.lng);})
-  .y(function(d) {return y(d.lat);})
+var geoline = d3.svg.line()
+  .x(function(d) {return lngScale(d.lng);})
+  .y(function(d) {return latScale(d.lat);})
+  .interpolate("linear");
+var distline = d3.svg.line()
+  .x(function(d) {return distScale(d.dist);})
+  .y(function(d) {return displayScale(1);})
   .interpolate("linear");
 g.append("path")
-  .attr("d", function(d) {return line(red)})
+  .attr("d", function(d) {return geoline(red)})
   .style("stroke-width", 15)
   .style("stroke", "red")
   .style("fill", "none");
-g.selectAll("scatter-dots")
+g.selectAll("MetroStations")
   .data(red)
   .enter()
   .append("svg:circle")
-  .attr("cx", function (d) {return x(d.lng);})
-  .attr("cy", function (d) {return y(d.lat);})
+  .attr("cx", function (d) {return lngScale(d.lng);})
+  .attr("cy", function (d) {return latScale(d.lat);})
   .attr("r", 12)
   .style("stroke-width", 3)
   .style("stroke", "black")
