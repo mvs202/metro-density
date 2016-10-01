@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Metro Density</title>
+<style>
+html {
+  height: 100%;
+  }
+body {
+  margin: 0px;
+  font-family: menlo;
+  font-size: 14px;
+  overflow: hidden;
+  }
+svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  }
+</style>
+<script src="http://d3js.org/d3.v2.min.js"></script>
+</head>
+<body>
+</body>
+<script>
+var red = [
+  {name: "Shady Grove",          lat: 39.119990, lng: -77.164761, dist:  0.0000},
+  {name: "Rockville",            lat: 39.085452, lng: -77.146689, dist:  2.5847},
+  {name: "Twinbrook",            lat: 39.062389, lng: -77.120792, dist:  4.7091},
+  {name: "White Flint",          lat: 39.047162, lng: -77.112782, dist:  5.8498},
+  {name: "Grosvenor-Strathmore", lat: 39.029243, lng: -77.103838, dist:  7.1824},
+  {name: "Medical Center",       lat: 39.000062, lng: -77.096948, dist:  9.2366},
+  {name: "Bethesda",             lat: 38.984431, lng: -77.094151, dist: 10.3286},
+  {name: "Friendship Heights",   lat: 38.960997, lng: -77.085767, dist: 12.0140},
+  {name: "Tenleytown–AU",        lat: 38.947849, lng: -77.079299, dist: 12.9902},
+  {name: "Van Ness–UDC",         lat: 38.944519, lng: -77.063716, dist: 13.8610},
+  {name: "Cleveland Park",       lat: 38.935852, lng: -77.058624, dist: 14.5222},
+  {name: "Woodley Park",         lat: 38.925000, lng: -77.052350, dist: 15.3477},
+  {name: "Dupont Circle",        lat: 38.911129, lng: -77.044428, dist: 16.4008},
+  {name: "Farragut North",       lat: 38.903297, lng: -77.039502, dist: 17.0059},
+  {name: "Metro Center",         lat: 38.898327, lng: -77.027777, dist: 17.7271},
+  {name: "Gallery Place",        lat: 38.898354, lng: -77.021527, dist: 18.0633},
+  {name: "Judiciary Square",     lat: 38.896121, lng: -77.016312, dist: 18.3848},
+  {name: "Union Station",        lat: 38.897770, lng: -77.006402, dist: 18.9286},
+  {name: "NoMa–Gallaudet U",     lat: 38.907413, lng: -77.002981, dist: 19.6180},
+  {name: "Rhode Island Avenue",  lat: 38.920778, lng: -76.995682, dist: 20.6176},
+  {name: "Brookland–CUA",        lat: 38.933232, lng: -76.994474, dist: 21.4801},
+  {name: "Fort Totten",          lat: 38.951808, lng: -77.001864, dist: 22.8282},
+  {name: "Takoma",               lat: 38.975432, lng: -77.017421, dist: 24.6706},
+  {name: "Silver Spring",        lat: 38.993658, lng: -77.032307, dist: 26.1699},
+  {name: "Forest Glen",          lat: 39.015465, lng: -77.042667, dist: 27.7820},
+  {name: "Wheaton",              lat: 39.038565, lng: -77.050776, dist: 29.4413},
+  {name: "Glenmont",             lat: 39.061743, lng: -77.053097, dist: 31.0492}
+  ];
+
+var w = window.innerWidth,
+    h = window.innerHeight;
+var margin = 20;
+var x = d3.scale.linear()
+  .domain([d3.min(red, function (d) {return d.lng;}), d3.max(red, function (d) {return d.lng;})])
+  .range([margin, w - margin]);
+var y = d3.scale.linear()
+  .domain([d3.min(red, function (d) {return d.lat;}), d3.max(red, function (d) {return d.lat;})])
+  .range([h - margin, margin]);
+var display = d3.select('body')
+  .append('svg:svg')
+  .attr('width', w)
+  .attr('height', h)
+  .attr('class', 'display');
+var g = display.append('g')
+var line = d3.svg.line()
+  .x(function(d) {return x(d.lng);})
+  .y(function(d) {return y(d.lat);})
+  .interpolate("linear");
+g.append("path")
+  .attr("d", function(d) {return line(red)})
+  .style("stroke-width", 15)
+  .style("stroke", "red")
+  .style("fill", "none");
+g.selectAll("scatter-dots")
+  .data(red)
+  .enter()
+  .append("svg:circle")
+  .attr("cx", function (d) {return x(d.lng);})
+  .attr("cy", function (d) {return y(d.lat);})
+  .attr("r", 12)
+  .style("stroke-width", 3)
+  .style("stroke", "black")
+  .style("fill", "white")
+  .append("svg:title")
+  .text(function(d) {return d.name;});
+</script>
+</html>
