@@ -20,7 +20,7 @@ svg {
   height: 100%;
   }
 </style>
-<script src="https://d3js.org/d3.v2.min.js"></script>
+<script src="http://d3js.org/d3.v2.min.js"></script>
 </head>
 <body onclick="switchDisplay()">
 </body>
@@ -54,7 +54,53 @@ var red = [
   {name: "Wheaton",              lat: 39.038565, lng: -77.050776, dist: 29.4413},
   {name: "Glenmont",             lat: 39.061743, lng: -77.053097, dist: 31.0492}
   ];
+var silver = [
+  {name: "Largo Town Center",   lat: 38.900269, lng: -76.844540, dist:  0.0000},
+  {name: "Morgan Boulevard",    lat: 38.893586, lng: -76.868498, dist:  1.3634},
+  {name: "Addison Road",        lat: 38.886702, lng: -76.893290, dist:  2.7739},
+  {name: "Capitol Heights",     lat: 38.889571, lng: -76.913313, dist:  3.8714},
+  {name: "Benning Road",        lat: 38.890418, lng: -76.937662, dist:  5.1831},
+  {name: "Stadium–Armory",      lat: 38.885982, lng: -76.977168, dist:  7.3269},
+  {name: "Potomac Avenue",      lat: 38.880874, lng: -76.985397, dist:  7.8900},
+  {name: "Eastern Market",      lat: 38.884148, lng: -76.995010, dist:  8.4566},
+  {name: "Capitol South",       lat: 38.885669, lng: -77.005892, dist:  9.0525},
+  {name: "Federal Center SW",   lat: 38.884981, lng: -77.015536, dist:  9.5729},
+  {name: "L'Enfant Plaza",      lat: 38.884886, lng: -77.021600, dist:  9.8991},
+  {name: "Smithsonian",         lat: 38.887587, lng: -77.028174, dist: 10.3008},
+  {name: "Federal Triangle",    lat: 38.893789, lng: -77.027896, dist: 10.7294},
+  {name: "Metro Center",        lat: 38.898327, lng: -77.027777, dist: 11.0430},
+  {name: "McPherson Square",    lat: 38.901335, lng: -77.031958, dist: 11.3508},
+  {name: "Farragut West",       lat: 38.901366, lng: -77.039482, dist: 11.7555},
+  {name: "Foggy Bottom–GWU",    lat: 38.900705, lng: -77.050026, dist: 12.3239},
+  {name: "Rosslyn",             lat: 38.895493, lng: -77.071954, dist: 13.5534},
+  {name: "Court House",         lat: 38.891331, lng: -77.084823, dist: 14.3004},
+  {name: "Clarendon",           lat: 38.887176, lng: -77.094987, dist: 14.9153},
+  {name: "Virginia Square-GMU", lat: 38.883074, lng: -77.103809, dist: 15.4657},
+  {name: "Ballston-MU",         lat: 38.882238, lng: -77.111550, dist: 15.8856},
+  {name: "East Falls Church",   lat: 38.886042, lng: -77.156567, dist: 18.3242},
+  {name: "McLean",              lat: 38.925069, lng: -77.208304, dist: 22.2170},
+  {name: "Tysons Corner",       lat: 38.920304, lng: -77.221713, dist: 23.0070},
+  {name: "Greensboro",          lat: 38.919564, lng: -77.232555, dist: 23.5917},
+  {name: "Spring Hill",         lat: 38.928544, lng: -77.240880, dist: 24.3598},
+  {name: "Wiehle-Reston East",  lat: 38.947134, lng: -77.337699, dist: 29.7307}
+  ];
+silver = reverseLine(silver);
+var stations = [];
 var geoDisplay = true;
+for (var i = 0; i < red.length; i++)    {stations.push(red[i]);}
+for (var i = 0; i < silver.length; i++) {stations.push(silver[i]);}
+
+function reverseLine(line) {
+  var reverse = [];
+  var dist = 0;
+  for (var i = line.length - 1; i >= 0; i--)    {
+    reverse.push({name: line[i].name, lat: line[i].lat, lng: line[i].lng, dist: dist});
+    if (i > 0) {
+      dist += line[i].dist - line[i - 1].dist;
+      }
+    }
+  return reverse;
+  }
 
 function switchDisplay() {
   if (geoDisplay) {showDist(800);}
@@ -64,46 +110,52 @@ function switchDisplay() {
 
 function showDist(duration) {
   d3.select("svg").selectAll("circle")
-    .data(red)
+    .data(stations)
     .transition()
     .duration(duration)
     .attr("cx", function (d) {return distScale(d.dist);})
-    .attr("cy", function (d) {return displayScale(1);});
-  d3.select("svg").selectAll("path")
-    .data(red)
+    .attr("cy", function (d, i) {return displayScale(i < red.length ? 2 : 1);});
+  p1.data(red)
     .transition()
     .duration(duration)
-    .attr("d", function () {return distline(red);});
+    .attr("d", function () {return distline1(red);});
+  p2.data(silver)
+    .transition()
+    .duration(duration)
+    .attr("d", function () {return distline2(silver);});
   }
 
 function showGeo(duration) {
   d3.select("svg").selectAll("circle")
-    .data(red)
+    .data(stations)
     .transition()
     .duration(duration)
     .attr("cx", function (d) {return lngScale(d.lng);})
     .attr("cy", function (d) {return latScale(d.lat);});
-  d3.select("svg").selectAll("path")
-    .data(red)
+  p1.data(red)
     .transition()
     .duration(duration)
     .attr("d", function () {return geoline(red);});
+  p2.data(silver)
+    .transition()
+    .duration(duration)
+    .attr("d", function () {return geoline(silver);});
   }
 
 var w = window.innerWidth,
     h = window.innerHeight;
 var margin = 20;
 var lngScale = d3.scale.linear()
-  .domain([d3.min(red, function (d) {return d.lng;}), d3.max(red, function (d) {return d.lng;})])
+  .domain([d3.min(stations, function (d) {return d.lng;}), d3.max(stations, function (d) {return d.lng;})])
   .range([margin, w - margin]);
 var latScale = d3.scale.linear()
-  .domain([d3.min(red, function (d) {return d.lat;}), d3.max(red, function (d) {return d.lat;})])
+  .domain([d3.min(stations, function (d) {return d.lat;}), d3.max(stations, function (d) {return d.lat;})])
   .range([h - margin, margin]);
 var distScale = d3.scale.linear()
-  .domain([0, d3.max(red, function (d) {return d.dist;})])
+  .domain([0, d3.max(stations, function (d) {return d.dist;})])
   .range([margin, w - margin]);
 var displayScale = d3.scale.linear()
-  .domain([0, 2])
+  .domain([0, 3])
   .range([h - margin, margin]);
 var display = d3.select('body')
   .append('svg:svg')
@@ -115,16 +167,24 @@ var geoline = d3.svg.line()
   .x(function(d) {return lngScale(d.lng);})
   .y(function(d) {return latScale(d.lat);})
   .interpolate("linear");
-var distline = d3.svg.line()
+var distline1 = d3.svg.line()
+  .x(function(d) {return distScale(d.dist);})
+  .y(function(d) {return displayScale(2);})
+  .interpolate("linear");
+var distline2 = d3.svg.line()
   .x(function(d) {return distScale(d.dist);})
   .y(function(d) {return displayScale(1);})
   .interpolate("linear");
-g.append("path")
+var p1 = g.append("path")
   .style("stroke-width", 15)
   .style("stroke", "red")
   .style("fill", "none");
+var p2 = g.append("path")
+  .style("stroke-width", 15)
+  .style("stroke", "silver")
+  .style("fill", "none");
 g.selectAll("MetroStations")
-  .data(red)
+  .data(stations)
   .enter()
   .append("svg:circle")
   .attr("r", 12)
