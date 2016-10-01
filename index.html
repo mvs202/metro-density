@@ -131,6 +131,29 @@ var yellow = [
   {name: "Georgia Ave-Petworth",   lat: 38.936255, lng: -77.024252, dist: 12.2078},
   {name: "Fort Totten",            lat: 38.951808, lng: -77.001864, dist: 13.8127}
   ];
+var green = [
+  {name: "Branch Ave",       lat: 38.827022, lng: -76.911802, dist:  0.0000},
+  {name: "Suitland",         lat: 38.843839, lng: -76.931610, dist:  1.5866},
+  {name: "Naylor Rd",        lat: 38.851164, lng: -76.956314, dist:  3.0148},
+  {name: "Southern Ave",     lat: 38.841047, lng: -76.975003, dist:  4.2333},
+  {name: "Congress Heights", lat: 38.845379, lng: -76.987860, dist:  4.9903},
+  {name: "Anacostia",        lat: 38.862117, lng: -76.995325, dist:  6.2191},
+  {name: "Navy Yard",        lat: 38.876517, lng: -77.004749, dist:  7.3411},
+  {name: "Waterfront",       lat: 38.876478, lng: -77.017189, dist:  8.0104},
+  {name: "xxxxx", lat: 38.884886, lng: -77.021600, dist:  8.6403},
+  {name: "xxxxx", lat: 38.893907, lng: -77.021592, dist:  9.2638},
+  {name: "xxxxx", lat: 38.898354, lng: -77.021527, dist:  9.5712},
+  {name: "xxxxx", lat: 38.905638, lng: -77.021905, dist: 10.0752},
+  {name: "xxxxx", lat: 38.914546, lng: -77.021927, dist: 10.6909},
+  {name: "xxxxx", lat: 38.917015, lng: -77.029169, dist: 11.1176},
+  {name: "xxxxx", lat: 38.928711, lng: -77.032454, dist: 11.9468},
+  {name: "xxxxx", lat: 38.936255, lng: -77.024252, dist: 12.6259},
+  {name: "xxxxx", lat: 38.951808, lng: -77.001864, dist: 14.2309},
+  {name: "West Hyattsville",      lat: 38.955028, lng: -76.969522, dist: 15.9809},
+  {name: "Prince George's Plaza", lat: 38.965252, lng: -76.955988, dist: 16.9892},
+  {name: "College Park",          lat: 38.978400, lng: -76.928197, dist: 18.7282},
+  {name: "Greenbelt",             lat: 39.011067, lng: -76.911011, dist: 21.1574}
+  ];
 silver = reverseLine(silver);
 orange = reverseLine(orange);
 var stations = [];
@@ -139,6 +162,7 @@ for (var i = 0; i < red.length; i++)    {stations.push(red[i]);}
 for (var i = 0; i < silver.length; i++) {stations.push(silver[i]);}
 for (var i = 0; i < orange.length; i++) {stations.push(orange[i]);}
 for (var i = 0; i < yellow.length; i++) {stations.push(yellow[i]);}
+for (var i = 0; i < green.length; i++)  {stations.push(green[i]);}
 
 function reverseLine(line) {
   var reverse = [];
@@ -159,9 +183,10 @@ function switchDisplay() {
   }
 
 function verticalLevel(s) {
-  if (s < red.length) {return 4;}
-  if (s < red.length + silver.length) {return 2;}
-  if (s < red.length + silver.length + orange.length) {return 3;}
+  if (s < red.length) {return 5;}
+  if (s < red.length + silver.length) {return 3;}
+  if (s < red.length + silver.length + orange.length) {return 4;}
+  if (s < red.length + silver.length + orange.length + yellow.length) {return 2;}
   return 1;
   }
 
@@ -188,6 +213,10 @@ function showDist(duration) {
     .transition()
     .duration(duration)
     .attr("d", function () {return distline4(orange);});
+  p5.data(green)
+    .transition()
+    .duration(duration)
+    .attr("d", function () {return distline5(green);});
   }
 
 function showGeo(duration) {
@@ -213,6 +242,10 @@ function showGeo(duration) {
     .transition()
     .duration(duration)
     .attr("d", function () {return geoline(orange);});
+  p5.data(green)
+    .transition()
+    .duration(duration)
+    .attr("d", function () {return geoline(green);});
   }
 
 var w = window.innerWidth,
@@ -228,7 +261,7 @@ var distScale = d3.scale.linear()
   .domain([0, d3.max(stations, function (d) {return d.dist;})])
   .range([margin, w - margin]);
 var displayScale = d3.scale.linear()
-  .domain([0, 5])
+  .domain([0, 6])
   .range([h - margin, margin]);
 var display = d3.select('body')
   .append('svg:svg')
@@ -242,17 +275,21 @@ var geoline = d3.svg.line()
   .interpolate("linear");
 var distline1 = d3.svg.line()
   .x(function(d) {return distScale(d.dist);})
-  .y(function(d) {return displayScale(4);})
+  .y(function(d) {return displayScale(5);})
   .interpolate("linear");
 var distline2 = d3.svg.line()
   .x(function(d) {return distScale(d.dist);})
-  .y(function(d) {return displayScale(2);})
+  .y(function(d) {return displayScale(3);})
 var distline3 = d3.svg.line()
   .x(function(d) {return distScale(d.dist);})
-  .y(function(d) {return displayScale(1);})
+  .y(function(d) {return displayScale(2);})
 var distline4 = d3.svg.line()
   .x(function(d) {return distScale(d.dist);})
-  .y(function(d) {return displayScale(3);})
+  .y(function(d) {return displayScale(4);})
+  .interpolate("linear");
+var distline5 = d3.svg.line()
+  .x(function(d) {return distScale(d.dist);})
+  .y(function(d) {return displayScale(1);})
   .interpolate("linear");
 var p1 = g.append("path")
   .style("stroke-width", 15)
@@ -269,6 +306,10 @@ var p3 = g.append("path")
 var p4 = g.append("path")
   .style("stroke-width", 15)
   .style("stroke", "orange")
+  .style("fill", "none");
+var p5 = g.append("path")
+  .style("stroke-width", 15)
+  .style("stroke", "green")
   .style("fill", "none");
 g.selectAll("MetroStations")
   .data(stations)
