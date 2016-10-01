@@ -84,11 +84,31 @@ var silver = [
   {name: "Spring Hill",         lat: 38.928544, lng: -77.240880, dist: 24.3598},
   {name: "Wiehle-Reston East",  lat: 38.947134, lng: -77.337699, dist: 29.7307}
   ];
+var yellow = [
+  {name: "Huntington",             lat: 38.793895, lng: -77.074955, dist:  0.0000},
+  {name: "Eisenhower Ave",         lat: 38.800345, lng: -77.070831, dist:  0.4960},
+  {name: "King Street",            lat: 38.806506, lng: -77.060796, dist:  1.1805},
+  {name: "Braddock Road",          lat: 38.814052, lng: -77.053434, dist:  1.8324},
+  {name: "National Airport",       lat: 38.853003, lng: -77.043475, dist:  4.5720},
+  {name: "Crystal City",           lat: 38.857817, lng: -77.050346, dist:  5.0720},
+  {name: "Pentagon City",          lat: 38.862961, lng: -77.059142, dist:  5.6669},
+  {name: "Pentagon",               lat: 38.869474, lng: -77.053777, dist:  6.1991},
+  {name: "L'Enfant Plaza",         lat: 38.884886, lng: -77.021600, dist:  8.2222},
+  {name: "Archives-Navy Memorial", lat: 38.893907, lng: -77.021592, dist:  8.8456},
+  {name: "Gallery Place",          lat: 38.898354, lng: -77.021527, dist:  9.1530},
+  {name: "Mount Vernon Square",    lat: 38.905638, lng: -77.021905, dist:  9.6570},
+  {name: "Shaw",                   lat: 38.914546, lng: -77.021927, dist: 10.2727},
+  {name: "U Street",               lat: 38.917015, lng: -77.029169, dist: 10.6994},
+  {name: "Columbia Heights",       lat: 38.928711, lng: -77.032454, dist: 11.5286},
+  {name: "Georgia Ave-Petworth",   lat: 38.936255, lng: -77.024252, dist: 12.2078},
+  {name: "Fort Totten",            lat: 38.951808, lng: -77.001864, dist: 13.8127}
+  ];
 silver = reverseLine(silver);
 var stations = [];
 var geoDisplay = true;
 for (var i = 0; i < red.length; i++)    {stations.push(red[i]);}
 for (var i = 0; i < silver.length; i++) {stations.push(silver[i]);}
+for (var i = 0; i < yellow.length; i++) {stations.push(yellow[i]);}
 
 function reverseLine(line) {
   var reverse = [];
@@ -108,13 +128,19 @@ function switchDisplay() {
   geoDisplay = !geoDisplay;
   }
 
+function verticalLevel(s) {
+  if (s < red.length) {return 3;}
+  if (s < red.length + silver.length) {return 2;}
+  return 1;
+  }
+
 function showDist(duration) {
   d3.select("svg").selectAll("circle")
     .data(stations)
     .transition()
     .duration(duration)
     .attr("cx", function (d) {return distScale(d.dist);})
-    .attr("cy", function (d, i) {return displayScale(i < red.length ? 2 : 1);});
+    .attr("cy", function (d, i) {return displayScale(verticalLevel(i));});
   p1.data(red)
     .transition()
     .duration(duration)
@@ -123,6 +149,10 @@ function showDist(duration) {
     .transition()
     .duration(duration)
     .attr("d", function () {return distline2(silver);});
+  p3.data(yellow)
+    .transition()
+    .duration(duration)
+    .attr("d", function () {return distline3(yellow);});
   }
 
 function showGeo(duration) {
@@ -140,6 +170,10 @@ function showGeo(duration) {
     .transition()
     .duration(duration)
     .attr("d", function () {return geoline(silver);});
+  p3.data(yellow)
+    .transition()
+    .duration(duration)
+    .attr("d", function () {return geoline(yellow);});
   }
 
 var w = window.innerWidth,
@@ -155,7 +189,7 @@ var distScale = d3.scale.linear()
   .domain([0, d3.max(stations, function (d) {return d.dist;})])
   .range([margin, w - margin]);
 var displayScale = d3.scale.linear()
-  .domain([0, 3])
+  .domain([0, 4])
   .range([h - margin, margin]);
 var display = d3.select('body')
   .append('svg:svg')
@@ -169,9 +203,12 @@ var geoline = d3.svg.line()
   .interpolate("linear");
 var distline1 = d3.svg.line()
   .x(function(d) {return distScale(d.dist);})
-  .y(function(d) {return displayScale(2);})
+  .y(function(d) {return displayScale(3);})
   .interpolate("linear");
 var distline2 = d3.svg.line()
+  .x(function(d) {return distScale(d.dist);})
+  .y(function(d) {return displayScale(2);})
+var distline3 = d3.svg.line()
   .x(function(d) {return distScale(d.dist);})
   .y(function(d) {return displayScale(1);})
   .interpolate("linear");
@@ -182,6 +219,10 @@ var p1 = g.append("path")
 var p2 = g.append("path")
   .style("stroke-width", 15)
   .style("stroke", "silver")
+  .style("fill", "none");
+var p3 = g.append("path")
+  .style("stroke-width", 15)
+  .style("stroke", "yellow")
   .style("fill", "none");
 g.selectAll("MetroStations")
   .data(stations)
