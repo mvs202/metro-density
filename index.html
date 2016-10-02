@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>Metro Density</title>
+<!-- https://github.com/mvs202/metro-density -->
 <style>
 html {
   height: 100%;
@@ -23,7 +24,7 @@ svg {
   position: absolute;
   left: 8px;
   top: 8px;
-  z-index: 1;
+  z-index: 2;
   }
 </style>
 <script src="https://d3js.org/d3.v2.min.js"></script>
@@ -44,7 +45,7 @@ var red = [
   {name: "Medical Center",       lat: 39.000062, lng: -77.096948, dist:  9.2366},
   {name: "Bethesda",             lat: 38.984431, lng: -77.094151, dist: 10.3286},
   {name: "Friendship Heights",   lat: 38.960997, lng: -77.085767, dist: 12.0140},
-  {name: "Tenleytown-AU",        lat: 38.947849, lng: -77.079299, dist: 12.9902},
+  {name: "Tenleytown",           lat: 38.947849, lng: -77.079299, dist: 12.9902},
   {name: "Van Ness-UDC",         lat: 38.944519, lng: -77.063716, dist: 13.8610},
   {name: "Cleveland Park",       lat: 38.935852, lng: -77.058624, dist: 14.5222},
   {name: "Woodley Park",         lat: 38.925000, lng: -77.052350, dist: 15.3477},
@@ -231,12 +232,10 @@ function verticalLevel(s) {
   }
 
 function showDist(duration) {
-  d3.select("svg").selectAll("circle")
-    .data(stations)
+  metroStations.data(stations)
     .transition()
     .duration(duration)
-    .attr("cx", function (d) {return distScale(d.dist);})
-    .attr("cy", function (d, i) {return displayScale(verticalLevel(i));});
+    .attr("transform", function(d, i) {return "translate(" + distScale(d.dist) + "," + displayScale(verticalLevel(i)) + ")"});
   p1.data(red)
     .transition()
     .duration(duration)
@@ -264,12 +263,10 @@ function showDist(duration) {
   }
 
 function showGeo(duration) {
-  d3.select("svg").selectAll("circle")
-    .data(stations)
+  metroStations.data(stations)
     .transition()
     .duration(duration)
-    .attr("cx", function (d) {return lngScale(d.lng);})
-    .attr("cy", function (d) {return latScale(d.lat);});
+    .attr("transform", function(d) {return "translate(" + lngScale(d.lng) + "," + latScale(d.lat) + ")"});
   p1.data(red)
     .transition()
     .duration(duration)
@@ -367,15 +364,19 @@ var p6 = g.append("path")
   .style("stroke-width", 15)
   .style("stroke", "#075B99")
   .style("fill", "none");
-g.selectAll("MetroStations")
+var metroStations = g.selectAll("MetroStations")
   .data(stations)
   .enter()
-  .append("svg:circle")
+  .append("g");
+metroStations.append("svg:circle")
   .attr("r", 12)
   .style("stroke-width", 3)
   .style("stroke", "black")
-  .style("fill", "white")
-  .append("svg:title")
+  .style("fill", "white");
+metroStations.append("text")
+  .attr("dx", function(d){return 2})
+  .attr("dy", function(d){return 2})
+  .attr("transform", "translate(0,0) rotate(-30)")
   .text(function(d) {return d.name;});
 showGeo(0);
 </script>
