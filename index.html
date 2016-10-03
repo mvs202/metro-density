@@ -23,15 +23,6 @@ svg {
 text {
   text-transform: uppercase;
   }
-.labelOn {
-  fill: rgba(0, 0, 0, 1.0);
-  transition: 0.0s;
-  }
-.labelOff {
-  fill: rgba(0, 0, 0, 0.0);
-  transition: 0.6s;
-  transition-delay: 3.0s;
-  }
 #controls {
   position: absolute;
   left: 8px;
@@ -379,7 +370,17 @@ var p6 = g.append("path")
 var metroStations = g.selectAll("MetroStations")
   .data(stations)
   .enter()
-  .append("g");
+  .append("g")
+  .on('mouseover', function(d) {
+    d3.select(this).select("text").transition().duration("400")
+    .attr("fill", "rgba(0, 0, 0, 1.0)")
+    .attr("transform", "translate(0,0) rotate(-30)");
+    })
+  .on('mouseout', function(d) {
+    d3.select(this).select("text").transition().delay("2000").duration("200")
+    .attr("fill", "rgba(0, 0, 0, 0.0)")
+    .attr("transform", "translate(0,0) rotate(0)");
+    });
 metroStations.append("svg:circle")
   .attr("r", 12)
   .style("stroke-width", 3)
@@ -388,14 +389,9 @@ metroStations.append("svg:circle")
 metroStations.append("text")
   .attr("dx", function(d){return 2})
   .attr("dy", function(d){return 2})
-  .attr("class", "labelOff")
-  .text(function(d) {return d.name;})
-  .on('mouseover', function(d) {
-    d3.select(this).attr("class", "labelOn");
-    })
-  .on('mouseout', function(d) {
-    d3.select(this).attr("class", "labelOff");
-    });
+  .attr("fill", "rgba(0, 0, 0, 0.0)")
+  .attr("transform", "translate(0,0) rotate(0)")
+  .text(function(d) {return d.name;});
 showGeo(0);
 </script>
 </html>
