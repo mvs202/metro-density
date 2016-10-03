@@ -20,6 +20,18 @@ svg {
   width: 100%;
   height: 100%;
   }
+text {
+  text-transform: uppercase;
+  }
+.labelOn {
+  fill: rgba(0, 0, 0, 1.0);
+  transition: 0.0s;
+  }
+.labelOff {
+  fill: rgba(0, 0, 0, 0.0);
+  transition: 0.6s;
+  transition-delay: 3.0s;
+  }
 #controls {
   position: absolute;
   left: 8px;
@@ -71,7 +83,7 @@ var silver = [
   {name: "Addison Road",        lat: 38.886702, lng: -76.893290, dist:  2.7739},
   {name: "Capitol Heights",     lat: 38.889571, lng: -76.913313, dist:  3.8714},
   {name: "Benning Road",        lat: 38.890418, lng: -76.937662, dist:  5.1831},
-  {name: "Stadium–Armory",      lat: 38.885982, lng: -76.977168, dist:  7.3269},
+  {name: "Stadium-Armory",      lat: 38.885982, lng: -76.977168, dist:  7.3269},
   {name: "Potomac Avenue",      lat: 38.880874, lng: -76.985397, dist:  7.8900},
   {name: "Eastern Market",      lat: 38.884148, lng: -76.995010, dist:  8.4566},
   {name: "Capitol South",       lat: 38.885669, lng: -77.005892, dist:  9.0525},
@@ -101,7 +113,7 @@ var orange = [
   {name: "Cheverly",          lat: 38.916552, lng: -76.915104, dist:  3.1697},
   {name: "Deanwood",          lat: 38.907945, lng: -76.935569, dist:  4.4146},
   {name: "Minnesota Avenue",  lat: 38.898313, lng: -76.947716, dist:  5.3419},
-  {name: "Stadium–Armory",    lat: 38.885982, lng: -76.977168, dist:  7.1322},
+  {name: "Stadium-Armory",    lat: 38.885982, lng: -76.977168, dist:  7.1322},
   {name: "Potomac Avenue",    lat: 38.880874, lng: -76.985397, dist:  7.6953},
   {name: "Eastern Market",    lat: 38.884148, lng: -76.995010, dist:  8.2619},
   {name: "Capitol South",     lat: 38.885669, lng: -77.005892, dist:  8.8578},
@@ -171,7 +183,7 @@ var blue = [
   {name: "Addison Rd",            lat: 38.886702, lng: -76.893290, dist:  2.7739},
   {name: "Capitol Heights",       lat: 38.889571, lng: -76.913313, dist:  3.8714},
   {name: "Benning Rd",            lat: 38.890418, lng: -76.937662, dist:  5.1831},
-  {name: "Stadium–Armory",        lat: 38.885982, lng: -76.977168, dist:  7.3269},
+  {name: "Stadium-Armory",        lat: 38.885982, lng: -76.977168, dist:  7.3269},
   {name: "Potomac Ave",           lat: 38.880874, lng: -76.985397, dist:  7.8900},
   {name: "Eastern Market",        lat: 38.884148, lng: -76.995010, dist:  8.4566},
   {name: "Capitol South",         lat: 38.885669, lng: -77.005892, dist:  9.0525},
@@ -192,7 +204,7 @@ var blue = [
   {name: "Braddock Rd",           lat: 38.814052, lng: -77.053434, dist: 19.9811},
   {name: "King St",               lat: 38.806506, lng: -77.060796, dist: 20.6330},
   {name: "Van Dorn St",           lat: 38.799263, lng: -77.129111, dist: 24.3415},
-  {name: "Franconia–Springfield", lat: 38.766196, lng: -77.168487, dist: 27.4453}
+  {name: "Franconia-Springfield", lat: 38.766196, lng: -77.168487, dist: 27.4453}
   ];
 silver = reverseLine(silver);
 orange = reverseLine(orange);
@@ -376,8 +388,14 @@ metroStations.append("svg:circle")
 metroStations.append("text")
   .attr("dx", function(d){return 2})
   .attr("dy", function(d){return 2})
-  .attr("transform", "translate(0,0) rotate(-30)")
-  .text(function(d) {return d.name;});
+  .attr("class", "labelOff")
+  .text(function(d) {return d.name;})
+  .on('mouseover', function(d) {
+    d3.select(this).attr("class", "labelOn");
+    })
+  .on('mouseout', function(d) {
+    d3.select(this).attr("class", "labelOff");
+    });
 showGeo(0);
 </script>
 </html>
