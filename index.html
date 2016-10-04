@@ -199,14 +199,14 @@ var blue = [
   ];
 var stations = [];
 var lines = [];
-addLine(red, "#FF1C18", 5);
-addLine(orange, "#FC7D20", 3);
-addLine(yellow, "#F3EC11", 1);
-addLine(green, "#008749", 2);
-addLine(blue, "#075B99", 0);
-addLine(silver, "#CCCCD8", 4);
+addLine(red, "#FF1C18", 5, "Red Line");
+addLine(silver, "#CCCCD8", 4, "Silver Line");
+addLine(orange, "#FC7D20", 3, "Orange Line");
+addLine(green, "#008749", 2, "Green Line");
+addLine(blue, "#075B99", 0, "Blue Line");
+addLine(yellow, "#F3EC11", 1, "Yellow Line");
 
-function addLine(line, color, order) {
+function addLine(line, color, order, name) {
   // make sure line goes west-to-east
   if (line[0].lng > line[line.length - 1].lng) {
     line = reverseLine(line);
@@ -219,7 +219,11 @@ function addLine(line, color, order) {
     .x(function(d) {return distScale(d.dist);})
     .y(displayScaleFunction(order))
     .interpolate("linear");
-  lines.push({line: line, color: color, distline: distline});
+  var lineLength = line[line.length - 1].dist;
+  var lineStops = line.length;
+  var density = Math.round(10*(lineStops - 1)/lineLength)/10;
+  var stats = name + ": " + Math.round(10*lineLength)/10 + " miles, " + lineStops + " stops. " + density + " stops per mile.";
+  lines.push({line: line, color: color, order: order, distline: distline, stats: stats});
   }
 
 function displayScaleFunction(order) {
@@ -263,9 +267,14 @@ function showGeo(duration) {
     .attr("transform", function(d) {return "translate(" + lngScale(d.lng) + "," + latScale(d.lat) + ")"});
   for (var i = 0; i < lines.length; i++) {
     lines[i].path.data(lines[i].line)
-    .transition()
-    .duration(duration)
-    .attr("d", geolineFunction(lines[i].line));  // "d" is the Path Description
+      .transition()
+      .duration(duration)
+      .attr("d", geolineFunction(lines[i].line));  // "d" is the Path Description
+    lines[i].statLabel.data(lines[i].stats)
+      .transition()
+      .duration(duration)
+      .attr("x", 12)
+      .attr("y", 30 + 20*(lines.length - lines[i].order));
     }
   }
 
@@ -286,7 +295,7 @@ var distScale = d3.scale.linear()
   .domain([0, d3.max(stations, function (d) {return d.dist;})])
   .range([margin, w - margin]);
 var displayScale = d3.scale.linear()
-  .domain([0, 7])
+  .domain([0, lines.length + 1])
   .range([h - margin, margin]);
 var display = d3.select('body')
   .append('svg:svg')
@@ -303,6 +312,9 @@ for (var i = 0; i < lines.length; i++) {
     .style("stroke-width", 15)
     .style("stroke", lines[i].color)
     .style("fill", "none");
+  lines[i].statLabel = g.append("text")
+    .attr("fill", "black")
+    .text(lines[i].stats);
   }
 var metroStations = g.selectAll("MetroStations")
   .data(stations)
