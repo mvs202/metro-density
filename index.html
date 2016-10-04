@@ -197,16 +197,34 @@ var blue = [
   {name: "Van Dorn St",           lat: 38.799263, lng: -77.129111, dist: 24.3415},
   {name: "Franconia-Springfield", lat: 38.766196, lng: -77.168487, dist: 27.4453}
   ];
-silver = reverseLine(silver);
-orange = reverseLine(orange);
-blue = reverseLine(blue);
 var stations = [];
-for (var i = 0; i < red.length; i++)    {stations.push(red[i]);}
-for (var i = 0; i < silver.length; i++) {stations.push(silver[i]);}
-for (var i = 0; i < orange.length; i++) {stations.push(orange[i]);}
-for (var i = 0; i < yellow.length; i++) {stations.push(yellow[i]);}
-for (var i = 0; i < green.length; i++)  {stations.push(green[i]);}
-for (var i = 0; i < blue.length; i++)   {stations.push(blue[i]);}
+var lines = [];
+addLine(red, "#FF1C18", 5);
+addLine(orange, "#FC7D20", 3);
+addLine(yellow, "#F3EC11", 1);
+addLine(green, "#008749", 2);
+addLine(blue, "#075B99", 0);
+addLine(silver, "#CCCCD8", 4);
+
+function addLine(line, color, order) {
+  // make sure line goes west-to-east
+  if (line[0].lng > line[line.length - 1].lng) {
+    line = reverseLine(line);
+    }
+  for (var i = 0; i < line.length; i++) {
+    line[i].parent = order;
+    stations.push(line[i]);
+    }
+  var distline = d3.svg.line()  // Path Data Generator Function
+    .x(function(d) {return distScale(d.dist);})
+    .y(displayScaleFunction(order))
+    .interpolate("linear");
+  lines.push({line: line, color: color, distline: distline});
+  }
+
+function displayScaleFunction(order) {
+  return function(d) {return displayScale(order);}
+  }
 
 function reverseLine(line) {
   var reverse = [];
@@ -225,44 +243,17 @@ function switchDisplay() {
   else                                               {showDist(800);}
   }
 
-function verticalLevel(s) {
-  if (s < red.length) {return 6;}
-  if (s < red.length + silver.length) {return 3;}
-  if (s < red.length + silver.length + orange.length) {return 5;}
-  if (s < red.length + silver.length + orange.length + yellow.length) {return 2;}
-  if (s < red.length + silver.length + orange.length + yellow.length + green.length) {return 1;}
-  return 4;
-  }
-
 function showDist(duration) {
   metroStations.data(stations)
     .transition()
     .duration(duration)
-    .attr("transform", function(d, i) {return "translate(" + distScale(d.dist) + "," + displayScale(verticalLevel(i)) + ")"});
-  p1.data(red)
-    .transition()
-    .duration(duration)
-    .attr("d", function () {return distline1(red);});
-  p2.data(silver)
-    .transition()
-    .duration(duration)
-    .attr("d", function () {return distline2(silver);});
-  p3.data(yellow)
-    .transition()
-    .duration(duration)
-    .attr("d", function () {return distline3(yellow);});
-  p4.data(orange)
-    .transition()
-    .duration(duration)
-    .attr("d", function () {return distline4(orange);});
-  p5.data(green)
-    .transition()
-    .duration(duration)
-    .attr("d", function () {return distline5(green);});
-  p6.data(blue)
-    .transition()
-    .duration(duration)
-    .attr("d", function () {return distline6(blue);});
+    .attr("transform", function(d, i) {return "translate(" + distScale(d.dist) + "," + displayScale(d.parent) + ")"});
+  for (var i = 0; i < lines.length; i++) {
+    lines[i].path.data(lines[i].line)
+      .transition()
+      .duration(duration)
+      .attr("d", lines[i].distline(lines[i].line));  // "d" is the Path Description
+    }
   }
 
 function showGeo(duration) {
@@ -270,30 +261,16 @@ function showGeo(duration) {
     .transition()
     .duration(duration)
     .attr("transform", function(d) {return "translate(" + lngScale(d.lng) + "," + latScale(d.lat) + ")"});
-  p1.data(red)
+  for (var i = 0; i < lines.length; i++) {
+    lines[i].path.data(lines[i].line)
     .transition()
     .duration(duration)
-    .attr("d", function () {return geoline(red);});
-  p2.data(silver)
-    .transition()
-    .duration(duration)
-    .attr("d", function () {return geoline(silver);});
-  p3.data(yellow)
-    .transition()
-    .duration(duration)
-    .attr("d", function () {return geoline(yellow);});
-  p4.data(orange)
-    .transition()
-    .duration(duration)
-    .attr("d", function () {return geoline(orange);});
-  p5.data(green)
-    .transition()
-    .duration(duration)
-    .attr("d", function () {return geoline(green);});
-  p6.data(blue)
-    .transition()
-    .duration(duration)
-    .attr("d", function () {return geoline(blue);});
+    .attr("d", geolineFunction(lines[i].line));  // "d" is the Path Description
+    }
+  }
+
+function geolineFunction(line) {
+  return function () {return geoline(line);}
   }
 
 var w = window.innerWidth,
@@ -321,52 +298,12 @@ var geoline = d3.svg.line()
   .x(function(d) {return lngScale(d.lng);})
   .y(function(d) {return latScale(d.lat);})
   .interpolate("linear");
-var distline1 = d3.svg.line()
-  .x(function(d) {return distScale(d.dist);})
-  .y(function(d) {return displayScale(6);})
-  .interpolate("linear");
-var distline2 = d3.svg.line()
-  .x(function(d) {return distScale(d.dist);})
-  .y(function(d) {return displayScale(3);})
-var distline3 = d3.svg.line()
-  .x(function(d) {return distScale(d.dist);})
-  .y(function(d) {return displayScale(2);})
-var distline4 = d3.svg.line()
-  .x(function(d) {return distScale(d.dist);})
-  .y(function(d) {return displayScale(5);})
-  .interpolate("linear");
-var distline5 = d3.svg.line()
-  .x(function(d) {return distScale(d.dist);})
-  .y(function(d) {return displayScale(1);})
-  .interpolate("linear");
-var distline6 = d3.svg.line()
-  .x(function(d) {return distScale(d.dist);})
-  .y(function(d) {return displayScale(4);})
-  .interpolate("linear");
-var p1 = g.append("path")
-  .style("stroke-width", 15)
-  .style("stroke", "#FF1C18")
-  .style("fill", "none");
-var p2 = g.append("path")
-  .style("stroke-width", 15)
-  .style("stroke", "#CCCCD8")
-  .style("fill", "none");
-var p3 = g.append("path")
-  .style("stroke-width", 15)
-  .style("stroke", "#F3EC11")
-  .style("fill", "none");
-var p4 = g.append("path")
-  .style("stroke-width", 15)
-  .style("stroke", "#FC7D20")
-  .style("fill", "none");
-var p5 = g.append("path")
-  .style("stroke-width", 15)
-  .style("stroke", "#008749")
-  .style("fill", "none");
-var p6 = g.append("path")
-  .style("stroke-width", 15)
-  .style("stroke", "#075B99")
-  .style("fill", "none");
+for (var i = 0; i < lines.length; i++) {
+  lines[i].path = g.append("path")  // define new property
+    .style("stroke-width", 15)
+    .style("stroke", lines[i].color)
+    .style("fill", "none");
+  }
 var metroStations = g.selectAll("MetroStations")
   .data(stations)
   .enter()
@@ -377,7 +314,7 @@ var metroStations = g.selectAll("MetroStations")
     .attr("transform", "translate(0,0) rotate(-30)");
     })
   .on('mouseout', function(d) {
-    d3.select(this).select("text").transition().delay("2000").duration("200")
+    d3.select(this).select("text").transition().delay("3200").duration("200")
     .attr("fill", "rgba(0, 0, 0, 0.0)")
     .attr("transform", "translate(0,0) rotate(0)");
     });
